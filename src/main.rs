@@ -1,4 +1,7 @@
 #![allow(clippy::uninlined_format_args)]
+use std::process::exit;
+
+use axoupdater::{AxoUpdater, AxoupdateError};
 use clap::Parser;
 use unicode_width::UnicodeWidthStr;
 
@@ -8,7 +11,13 @@ struct Args {
     msg: String,
 }
 
-fn main() {
+fn main() -> Result<(), AxoupdateError> {
+    if AxoUpdater::new_for("axolotlsay").load_receipt()?.run()? {
+        eprintln!("");
+        eprintln!("New version installed! Please restart.");
+        exit(0);
+    }
+
     let args = Args::parse();
     let msg = &args.msg;
     let count = UnicodeWidthStr::width(args.msg.as_str());
@@ -18,4 +27,6 @@ fn main() {
     println!("         +{}+", dashes);
     println!("        /");
     println!("≽(◕ ᴗ ◕)≼");
+
+    Ok(())
 }
