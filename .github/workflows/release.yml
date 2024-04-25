@@ -62,7 +62,7 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=installer-arm-rosetta-2-mac cargo-dist"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=binary-aliases-installers cargo-dist"
       # sure would be cool if github gave us proper conditionals...
       # so here's a doubly-nested ternary-via-truthiness to try to provide the best possible
       # functionality based on whether this is a pull_request, and whether it's from a fork.
@@ -110,6 +110,9 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BUILD_MANIFEST_NAME: target/distrib/${{ join(matrix.targets, '-') }}-dist-manifest.json
     steps:
+      - name: enable windows longpaths
+        run: |
+          git config --global core.longpaths true
       - uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -180,7 +183,7 @@ jobs:
           submodules: recursive
       - name: Install cargo-dist
         shell: bash
-        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=installer-arm-rosetta-2-mac cargo-dist"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=binary-aliases-installers cargo-dist"
       # Get all the local artifacts for the global tasks to use (for e.g. checksums)
       - name: Fetch local artifacts
         uses: actions/download-artifact@v4
@@ -222,10 +225,11 @@ jobs:
     needs:
       - plan
       - build-local-artifacts
+      - custom-local-build-greeter
       - build-global-artifacts
       - custom-global-build-greeter
     # Only run if we're "publishing", and only if local and global didn't fail (skipped is fine)
-    if: ${{ always() && needs.plan.outputs.publishing == 'true' && (needs.build-global-artifacts.result == 'skipped' || needs.build-global-artifacts.result == 'success') && (needs.build-local-artifacts.result == 'skipped' || needs.build-local-artifacts.result == 'success') }}
+    if: ${{ always() && needs.plan.outputs.publishing == 'true' && (needs.build-global-artifacts.result == 'skipped' || needs.build-global-artifacts.result == 'success') && (needs.custom-global-build-greeter.result == 'skipped' || needs.custom-global-build-greeter.result == 'success') && (needs.build-local-artifacts.result == 'skipped' || needs.build-local-artifacts.result == 'success') && (needs.custom-local-build-greeter.result == 'skipped' || needs.custom-local-build-greeter.result == 'success') }}
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: "ubuntu-20.04"
@@ -236,7 +240,7 @@ jobs:
         with:
           submodules: recursive
       - name: Install cargo-dist
-        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=installer-arm-rosetta-2-mac cargo-dist"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=binary-aliases-installers cargo-dist"
       # Fetch artifacts from scratch-storage
       - name: Fetch artifacts
         uses: actions/download-artifact@v4
