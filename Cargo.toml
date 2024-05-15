@@ -1,7 +1,7 @@
 [package]
 name = "axolotlsay"
 description = "💬 a CLI for learning to distribute CLIs in rust"
-version = "0.2.136"
+version = "0.2.137"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/mistydemeo/cargodisttest.git"
@@ -54,7 +54,7 @@ publish-prereleases = false
 # Publish jobs to run in CI
 pr-run-mode = "plan"
 # Publish jobs to run in CI
-publish-jobs = ["homebrew", "./publish-greeter"]
+publish-jobs = ["homebrew", "npm", "./publish-greeter"]
 # Where to host releases
 hosting = "github"
 # Whether to install an updater program
