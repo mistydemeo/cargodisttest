@@ -406,7 +406,7 @@ jobs:
           gh release create "${{ needs.plan.outputs.tag }}" $args
 
           args=""
-          gh releases upload "${{ needs.plan.outputs.tag }}" artifacts/* $args
+          gh release upload "${{ needs.plan.outputs.tag }}" artifacts/* $args
 
   custom-post-announce-greeter:
     needs:
