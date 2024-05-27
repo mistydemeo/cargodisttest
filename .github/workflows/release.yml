@@ -394,7 +394,7 @@ jobs:
           PRERELEASE_FLAG: "${{ fromJson(needs.host.outputs.val).announcement_is_prerelease && '--prerelease' || '' }}"
           ANNOUNCEMENT_TITLE: "${{ fromJson(needs.host.outputs.val).announcement_title }}"
           ANNOUNCEMENT_BODY: "${{ fromJson(needs.host.outputs.val).announcement_github_body }}"
-          REPO: ""mistydemeo"/"cargodisttest-target""
+          REPO: "mistydemeo/cargodisttest-target"
           EXTERNAL_REPO_COMMIT: "${{ fromJson(needs.host.outputs.val).ci.github.external_repo_commit }}"
         run: |
           args=""
