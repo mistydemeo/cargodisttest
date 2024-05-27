@@ -399,6 +399,9 @@ jobs:
         run: |
           args=""
           args="$args --repo $REPO --target $EXTERNAL_REPO_COMMIT"
+          # We need to ensure `gh` uses the token that can auth
+          # to the external repo instead of the default one.
+          echo $GH_RELEASES_TOKEN | gh auth --with-token
           # Write and read notes from a file to avoid quoting breaking things
           echo "$ANNOUNCEMENT_BODY" > $RUNNER_TEMP/notes.txt
 
