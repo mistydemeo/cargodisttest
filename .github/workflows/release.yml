@@ -401,7 +401,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_RELEASES_TOKEN }}
         run: |
           args=""
-          args="$args --repo $REPO --target $EXTERNAL_REPO_COMMIT"
+          args="$args --repo $REPO"
+          if [ -n "${EXTERNAL_REPO_COMMIT:-}" ]; then
+            args="$args --target $EXTERNAL_REPO_COMMIT"
+          fi
           # Write and read notes from a file to avoid quoting breaking things
           echo "$ANNOUNCEMENT_BODY" > $RUNNER_TEMP/notes.txt
 
