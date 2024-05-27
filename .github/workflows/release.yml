@@ -396,12 +396,12 @@ jobs:
           ANNOUNCEMENT_BODY: "${{ fromJson(needs.host.outputs.val).announcement_github_body }}"
           REPO: "mistydemeo/cargodisttest-target"
           EXTERNAL_REPO_COMMIT: "${{ fromJson(needs.host.outputs.val).ci.github.external_repo_commit }}"
+          # We need to ensure `gh` uses the token that can auth
+          # to the external repo instead of the runner token.
+          GH_TOKEN: ${{ secrets.GH_RELEASES_TOKEN }}
         run: |
           args=""
           args="$args --repo $REPO --target $EXTERNAL_REPO_COMMIT"
-          # We need to ensure `gh` uses the token that can auth
-          # to the external repo instead of the default one.
-          echo $GH_RELEASES_TOKEN | gh auth login --with-token
           # Write and read notes from a file to avoid quoting breaking things
           echo "$ANNOUNCEMENT_BODY" > $RUNNER_TEMP/notes.txt
 
