@@ -8,8 +8,8 @@
 # * uploads those artifacts to temporary workflow zip
 # * on success, uploads the artifacts to a GitHub Release
 #
-# Note that a GitHub Release with this tag is assumed to exist as a draft
-# with the appropriate title/body, and will be undrafted for you.
+# Note that the GitHub Release will be created with a generated
+# title/body based on your changelogs.
 
 name: Release
 
@@ -62,7 +62,7 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.15.0-prerelease.20/cargo-dist-installer.sh | sh"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=release-no-action cargo-dist"
       # sure would be cool if github gave us proper conditionals...
       # so here's a doubly-nested ternary-via-truthiness to try to provide the best possible
       # functionality based on whether this is a pull_request, and whether it's from a fork.
@@ -183,7 +183,7 @@ jobs:
           submodules: recursive
       - name: Install cargo-dist
         shell: bash
-        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.15.0-prerelease.20/cargo-dist-installer.sh | sh"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=release-no-action cargo-dist"
       # Get all the local artifacts for the global tasks to use (for e.g. checksums)
       - name: Fetch local artifacts
         uses: actions/download-artifact@v4
@@ -240,7 +240,7 @@ jobs:
         with:
           submodules: recursive
       - name: Install cargo-dist
-        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.15.0-prerelease.20/cargo-dist-installer.sh | sh"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=release-no-action cargo-dist"
       # Fetch artifacts from scratch-storage
       - name: Fetch artifacts
         uses: actions/download-artifact@v4
@@ -390,19 +390,25 @@ jobs:
           # Remove the granular manifests
           rm -f artifacts/*-dist-manifest.json
       - name: Create GitHub Release
-        uses: ncipollo/release-action@v1
-        with:
-          owner: "mistydemeo"
-          repo: "cargodisttest-target"
-          token: ${{ secrets.GH_RELEASES_TOKEN }}
-          commit: ${{ fromJson(needs.host.outputs.val).ci.github.external_repo_commit }}
-          tag: ${{ needs.plan.outputs.tag }}
-          allowUpdates: true
-          updateOnlyUnreleased: true
-          omitBodyDuringUpdate: true
-          omitNameDuringUpdate: true
-          prerelease: ${{ fromJson(needs.host.outputs.val).announcement_is_prerelease }}
-          artifacts: "artifacts/*"
+        env:
+          PRERELEASE_FLAG: "${{ fromJson(needs.host.outputs.val).announcement_is_prerelease && '--prerelease' || '' }}"
+          ANNOUNCEMENT_TITLE: "${{ fromJson(needs.host.outputs.val).announcement_title }}"
+          ANNOUNCEMENT_BODY: "${{ fromJson(needs.host.outputs.val).announcement_github_body }}"
+          REPO: ""mistydemeo"/"cargodisttest-target""
+          EXTERNAL_REPO_COMMIT: "${{ fromJson(needs.host.outputs.val).ci.github.external_repo_commit }}"
+        run: |
+          args=""
+          args="$args --repo $REPO --target $EXTERNAL_REPO_COMMIT"
+          # Write and read notes from a file to avoid quoting breaking things
+          echo "$ANNOUNCEMENT_BODY" > $RUNNER_TEMP/notes.txt
+
+          args="$args --title $ANNOUNCEMENT_TITLE --notes-file $RUNNER_TEMP/notes.txt"
+          args="$args $PRERELEASE_FLAG"
+          gh release create "${{ needs.plan.outputs.tag }}" $args
+
+          args=""
+          args="$args --repo $REPO --target $EXTERNAL_REPO_COMMIT"
+          gh release upload "${{ needs.plan.outputs.tag }}" artifacts/* $args
 
   custom-post-announce-greeter:
     needs:
