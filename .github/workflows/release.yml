@@ -394,27 +394,12 @@ jobs:
           PRERELEASE_FLAG: "${{ fromJson(needs.host.outputs.val).announcement_is_prerelease && '--prerelease' || '' }}"
           ANNOUNCEMENT_TITLE: "${{ fromJson(needs.host.outputs.val).announcement_title }}"
           ANNOUNCEMENT_BODY: "${{ fromJson(needs.host.outputs.val).announcement_github_body }}"
-          REPO: "mistydemeo/cargodisttest-target"
-          EXTERNAL_REPO_COMMIT: "${{ fromJson(needs.host.outputs.val).ci.github.external_repo_commit }}"
-          # We need to ensure `gh` uses the token that can auth
-          # to the external repo instead of the runner token.
-          GH_TOKEN: ${{ secrets.GH_RELEASES_TOKEN }}
         run: |
-          args=""
-          args="$args --repo $REPO"
-          if [ -n "${EXTERNAL_REPO_COMMIT:-}" ]; then
-            args="$args --target $EXTERNAL_REPO_COMMIT"
-          fi
           # Write and read notes from a file to avoid quoting breaking things
           echo "$ANNOUNCEMENT_BODY" > $RUNNER_TEMP/notes.txt
 
-          args="$args --title $ANNOUNCEMENT_TITLE --notes-file $RUNNER_TEMP/notes.txt"
-          args="$args $PRERELEASE_FLAG"
-          gh release create "${{ needs.plan.outputs.tag }}" $args
-
-          args=""
-          args="$args --repo $REPO"
-          gh release upload "${{ needs.plan.outputs.tag }}" artifacts/* $args
+          gh release create "${{ needs.plan.outputs.tag }}" --title $ANNOUNCEMENT_TITLE --notes-file $RUNNER_TEMP/notes.txt $PRERELEASE_FLAG
+          gh release upload "${{ needs.plan.outputs.tag }}" artifacts/*
 
   custom-post-announce-greeter:
     needs:
