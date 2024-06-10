@@ -1,0 +1,3 @@
+[submodule "vendor/cargodisttest-target"]
+	path = vendor/cargodisttest-target
+	url = https://github.com/mistydemeo/cargodisttest-target
