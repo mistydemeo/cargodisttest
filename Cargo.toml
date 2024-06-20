@@ -10,6 +10,7 @@ homepage = "https://github.com/mistydemeo/cargodisttest"
 [dependencies]
 clap = { version = "4.1.4", features = ["derive"] }
 unicode-width = "0.1.10"
+axoupdater = { git = "https://github.com/axodotdev/axoupdater.git" }
 
 [dev-dependencies]
 assert_cmd = "2.0.8"
