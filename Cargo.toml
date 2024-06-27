@@ -1,7 +1,7 @@
 [package]
 name = "axolotlsay"
 description = "💬 a CLI for learning to distribute CLIs in rust"
-version = "0.2.197"
+version = "0.2.198"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/mistydemeo/cargodisttest.git"
@@ -61,6 +61,8 @@ hosting = ["github", "axodotdev"]
 install-updater = true
 # Whether to enable GitHub Attestations
 github-attestations = true
+# Which phase cargo-dist should use to create the GitHub release
+github-release = "host"
 
 [workspace.metadata.dist.aliases]
 axolotlsay = ["cargodisttest"]
