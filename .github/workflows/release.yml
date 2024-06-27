@@ -7,6 +7,10 @@
 # * builds artifacts with cargo-dist (archives, installers, hashes)
 # * uploads those artifacts to temporary workflow zip
 # * on success, uploads the artifacts to Axo Releases and makes an Announcement
+# * on success, uploads the artifacts to a GitHub Release
+#
+# Note that the GitHub Release will be created with a generated
+# title/body based on your changelogs.
 
 name: Release
 
@@ -62,7 +66,7 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.17.0-prerelease.2/cargo-dist-installer.sh | sh"
+        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.17.0/cargo-dist-installer.sh | sh"
       - name: Cache cargo-dist
         uses: actions/upload-artifact@v4
         with:
@@ -276,6 +280,7 @@ jobs:
           path: target/distrib/
           merge-multiple: true
       # Upload files to Axo Releases and create the Releases
+      # This is a harmless no-op for GitHub Releases, hosting for that happens in "announce"
       - id: host
         shell: bash
         run: |
@@ -387,6 +392,7 @@ jobs:
       packages: write
 
   # Create an Announcement for all the Axo Releases, updating the "latest" release
+  # Create a GitHub Release while uploading all files to it
   announce:
     needs:
       - plan
@@ -422,6 +428,28 @@ jobs:
       - name: Announce Axo Releases
         run: |
           cargo dist host --steps=announce ${{ needs.plan.outputs.tag-flag }}
+      # Create a GitHub Release while uploading all files to it
+      - name: "Download GitHub Artifacts"
+        uses: actions/download-artifact@v4
+        with:
+          pattern: artifacts-*
+          path: artifacts
+          merge-multiple: true
+      - name: Cleanup
+        run: |
+          # Remove the granular manifests
+          rm -f artifacts/*-dist-manifest.json
+      - name: Create GitHub Release
+        env:
+          PRERELEASE_FLAG: "${{ fromJson(needs.host.outputs.val).announcement_is_prerelease && '--prerelease' || '' }}"
+          ANNOUNCEMENT_TITLE: "${{ fromJson(needs.host.outputs.val).announcement_title }}"
+          ANNOUNCEMENT_BODY: "${{ fromJson(needs.host.outputs.val).announcement_github_body }}"
+          RELEASE_COMMIT: "${{ github.sha }}"
+        run: |
+          # Write and read notes from a file to avoid quoting breaking things
+          echo "$ANNOUNCEMENT_BODY" > $RUNNER_TEMP/notes.txt
+
+          gh release create "${{ needs.plan.outputs.tag }}" --target "$RELEASE_COMMIT" $PRERELEASE_FLAG --title "$ANNOUNCEMENT_TITLE" --notes-file "$RUNNER_TEMP/notes.txt" artifacts/*
 
   custom-post-announce-greeter:
     needs:
