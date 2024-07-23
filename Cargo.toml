@@ -1,7 +1,7 @@
 [package]
 name = "axolotlsay"
 description = "💬 a CLI for learning to distribute CLIs in rust"
-version = "0.2.214"
+version = "0.2.215"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/mistydemeo/cargodisttest.git"
@@ -78,6 +78,3 @@ libcue-dev = '*'
 [workspace.metadata.dist.dependencies.chocolatey]
 lftp = '*'
 cmake = '3.27.6'
-
-[workspace.metadata.dist.github-custom-runners]
-x86_64-unknown-linux-gnu = "ubuntu-latest"
