@@ -1,7 +1,7 @@
 [package]
 name = "axolotlsay"
 description = "💬 a CLI for learning to distribute CLIs in rust"
-version = "0.2.227"
+version = "0.2.228"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/mistydemeo/cargodisttest.git"
@@ -63,6 +63,8 @@ install-updater = true
 github-attestations = true
 # Path that installers should place binaries in
 install-path = "CARGO_HOME"
+# Whether to sign macOS executables
+macos-sign = true
 
 [workspace.metadata.dist.aliases]
 axolotlsay = ["cargodisttest"]
