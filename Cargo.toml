@@ -1,7 +1,7 @@
 [package]
 name = "axolotlsay"
 description = "💬 a CLI for learning to distribute CLIs in rust"
-version = "0.2.228"
+version = "0.2.229"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/mistydemeo/cargodisttest.git"
@@ -22,11 +22,11 @@ lto = "thin"
 # Config for 'cargo dist'
 [workspace.metadata.dist]
 # The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.21.1-github-macos-codesign"
+cargo-dist-version = "0.21.1-github-pkg"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app
-installers = ["shell", "powershell", "npm", "homebrew"]
+installers = ["shell", "powershell", "npm", "homebrew", "pkg"]
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
 # The archive format to use for windows builds (defaults .zip)
@@ -83,3 +83,7 @@ cmake = '3.27.6'
 
 [workspace.metadata.dist.github-custom-runners]
 x86_64-unknown-linux-gnu = "ubuntu-latest"
+
+# Configuration for the Mac .pkg installer
+[workspace.metadata.dist.mac-pkg-config]
+identifier = "com.mistydemeo.cargodisttest"
