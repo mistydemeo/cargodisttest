@@ -43,6 +43,7 @@ github-attestations = true
 install-path = "CARGO_HOME"
 # Whether to sign macOS executables
 macos-sign = true
+github-build-setup = "../build-setup.yml"
 
 [dist.aliases]
 axolotlsay = ["cargodisttest"]
