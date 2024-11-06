@@ -128,7 +128,6 @@ jobs:
         with:
           submodules: recursive
       - name: Install dist
-        shell: ${{ matrix.install_dist.shell }}
         run: ${{ matrix.install_dist.run }}
       # Get the dist-manifest
       - name: Fetch local artifacts
