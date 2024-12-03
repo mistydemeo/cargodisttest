@@ -1,4 +1,11 @@
 #![allow(clippy::uninlined_format_args)]
+use std::{
+    env::current_exe,
+    os::unix::process::CommandExt,
+    process::{exit, Command},
+};
+
+use axoupdater::{AxoUpdater, AxoupdateError};
 use clap::Parser;
 use unicode_width::UnicodeWidthStr;
 
@@ -8,7 +15,21 @@ struct Args {
     msg: String,
 }
 
-fn main() {
+fn main() -> Result<(), AxoupdateError> {
+    if AxoUpdater::new_for("axolotlsay").load_receipt()?.run()? {
+        eprintln!("");
+        eprintln!("New version installed! Restarting...");
+
+        let exe = current_exe().unwrap();
+        let mut args: Vec<String> = std::env::args().collect();
+
+        Command::new(exe).args(&mut args[1..]).exec();
+
+        // If we reached here, it means there was an error running it
+        eprintln!("Failed to exec new program!");
+        exit(1);
+    }
+
     let args = Args::parse();
     let msg = &args.msg;
     let count = UnicodeWidthStr::width(args.msg.as_str());
@@ -18,4 +39,6 @@ fn main() {
     println!("         +{}+", dashes);
     println!("        /");
     println!("≽(◕ ᴗ ◕)≼");
+
+    Ok(())
 }
