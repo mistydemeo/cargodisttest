@@ -65,7 +65,7 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=main cargo-dist"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=auditable-xwin cargo-dist"
       - name: Cache dist
         uses: actions/upload-artifact@v4
         with:
@@ -144,6 +144,8 @@ jobs:
           pattern: artifacts-*
           path: target/distrib/
           merge-multiple: true
+      - name: Install cargo-auditable
+        run: ${{ matrix.install_cargo_auditable.run }}
       - name: Install dependencies
         run: |
           ${{ matrix.packages_install }}
