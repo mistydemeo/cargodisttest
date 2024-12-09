@@ -44,7 +44,7 @@ install-path = "CARGO_HOME"
 # Whether to sign macOS executables
 macos-sign = true
 # Whether to embed dependency information using cargo-auditable
-cargo-auditable = true
+cargo-auditable = false
 
 [dist.aliases]
 axolotlsay = ["cargodisttest"]
