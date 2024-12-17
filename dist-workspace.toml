@@ -46,7 +46,7 @@ macos-sign = true
 # Whether to embed dependency information using cargo-auditable
 cargo-auditable = false
 # Whether to use cargo-cyclonedx to generate an SBOM
-cargo-cyclonedx = true
+cargo-cyclonedx = false
 # Whether to use omnibor-cli to generate OmniBOR Artifact IDs
 omnibor = true
 
