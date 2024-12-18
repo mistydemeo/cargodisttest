@@ -37,6 +37,8 @@ publish-jobs = ["homebrew", "npm", "./publish-greeter", "homebrew"]
 hosting = "github"
 # Whether to install an updater program
 install-updater = true
+# Whether to always use the latest updater instead of a specific known-good version
+always-use-latest-updater = true
 # Whether to enable GitHub Attestations
 github-attestations = true
 # Path that installers should place binaries in
