@@ -4,7 +4,7 @@ members = ["cargo:."]
 # Config for 'dist'
 [dist]
 # The preferred dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.28.2"
+cargo-dist-version = "0.29.0-prerelease.1"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app
@@ -51,6 +51,8 @@ cargo-auditable = false
 cargo-cyclonedx = false
 # Whether to use omnibor-cli to generate OmniBOR Artifact IDs
 omnibor = true
+# Checksums to generate for each App
+checksum = "false"
 
 [dist.aliases]
 axolotlsay = ["cargodisttest"]
