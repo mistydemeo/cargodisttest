@@ -49,8 +49,6 @@ macos-sign = true
 cargo-auditable = false
 # Whether to use cargo-cyclonedx to generate an SBOM
 cargo-cyclonedx = false
-# Whether to use omnibor-cli to generate OmniBOR Artifact IDs
-omnibor = true
 # Checksums to generate for each App
 checksum = "false"
 
