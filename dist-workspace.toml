@@ -51,6 +51,7 @@ cargo-auditable = false
 cargo-cyclonedx = false
 # Checksums to generate for each App
 checksum = "false"
+allow-dirty = ["ci"]
 
 [dist.aliases]
 axolotlsay = ["cargodisttest"]
