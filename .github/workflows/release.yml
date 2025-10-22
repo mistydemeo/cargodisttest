@@ -15,9 +15,7 @@
 
 name: Release
 permissions:
-  "attestations": "write"
   "contents": "write"
-  "id-token": "write"
 
 # This task will run whenever you push a git tag that looks like a version
 # like "1.0.0", "v0.1.0-prerelease.1", "my-app/0.1.0", "releases/v1.0.0", etc.
@@ -66,7 +64,7 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=misty-skip-host-on-plan-failure --locked cargo-dist"
+        run: "cargo install --git https://github.com/axodotdev/cargo-dist/ --branch=stable --locked cargo-dist"
       - name: Cache dist
         uses: actions/upload-artifact@v4
         with:
@@ -119,6 +117,10 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       BUILD_MANIFEST_NAME: target/distrib/${{ join(matrix.targets, '-') }}-dist-manifest.json
+    permissions:
+      "attestations": "write"
+      "contents": "read"
+      "id-token": "write"
     steps:
       - name: enable windows longpaths
         run: |
