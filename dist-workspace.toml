@@ -41,6 +41,8 @@ install-updater = true
 always-use-latest-updater = true
 # Whether to enable GitHub Attestations
 github-attestations = true
+# When to generate GitHub Attestations
+github-attestations-phase = "host"
 # Path that installers should place binaries in
 install-path = "CARGO_HOME"
 # Whether to sign macOS executables
