@@ -4,7 +4,7 @@ members = ["cargo:."]
 # Config for 'dist'
 [dist]
 # The preferred dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.30.0-github-stable"
+cargo-dist-version = "0.30.0-github-macos-runner-versions-stable"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app
@@ -51,8 +51,6 @@ macos-sign = false
 cargo-auditable = false
 # Whether to use cargo-cyclonedx to generate an SBOM
 cargo-cyclonedx = false
-# Checksums to generate for each App
-checksum = "false"
 
 [dist.aliases]
 axolotlsay = ["cargodisttest"]
@@ -68,6 +66,3 @@ libcue-dev = '*'
 [dist.dependencies.chocolatey]
 lftp = '*'
 cmake = '3.27.6'
-
-[dist.github-custom-runners]
-x86_64-unknown-linux-gnu = "ubuntu-latest"
