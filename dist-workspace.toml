@@ -51,8 +51,6 @@ macos-sign = false
 cargo-auditable = false
 # Whether to use cargo-cyclonedx to generate an SBOM
 cargo-cyclonedx = false
-# Skip checking whether the specified configuration files are up to date
-allow-dirty = ["ci"]
 
 [dist.aliases]
 axolotlsay = ["cargodisttest"]
