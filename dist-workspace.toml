@@ -66,8 +66,3 @@ libcue-dev = '*'
 [dist.dependencies.chocolatey]
 lftp = '*'
 cmake = '3.27.6'
-
-[dist.azure-windows-sign]
-endpoint = "https://weu.codesigning.azure.net/"
-account-name = "rpx-signing-account"
-certificate-profile-name = "rpx-public-trust-test"
